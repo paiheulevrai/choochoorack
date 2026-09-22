@@ -1,0 +1,16 @@
+{
+  "slug": "ChooChooBogie",
+  "name": "Choo Choo Bogie",
+  "version": "2.0.0",
+  "license": "MIT",
+  "brand": "Choo Choo",
+  "author": "Choo Choo",
+  "pluginUrl": "https://github.com/paiheulevrai/choochoorack",
+  "sourceUrl": "https://github.com/paiheulevrai/choochoorack",
+  "modules": [{
+    "slug": "Bogie",
+    "name": "Bogie",
+    "description": "Twelve-model one-shot drum synthesizer",
+    "tags": ["Drum", "Drum synth", "Percussion"]
+  }]
+}

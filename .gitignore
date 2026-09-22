@@ -1,0 +1,10 @@
+/build
+/dist
+/*.dll
+/*.vcvplugin
+.tmp
+**/build/
+**/dist/
+**/*.dll
+**/*.vcvplugin
+**/*.exe

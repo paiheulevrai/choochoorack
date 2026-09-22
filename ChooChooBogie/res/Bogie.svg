@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="81.28mm" height="128.5mm" viewBox="0 0 81.28 128.5">
+  <rect width="81.28" height="128.5" fill="#001f00"/>
+  <path d="M0 14C19 7 32 20 50 12S70 7 81 13M0 36C16 30 29 41 46 34S66 30 81 37M0 71C19 62 32 78 50 70S67 66 81 72M0 109C16 102 32 114 50 106S68 103 81 110" fill="none" stroke="#4e3e00" stroke-width="1.1" opacity=".75"/>
+  <path d="M0 17C20 10 32 23 51 15S69 10 81 16M0 75C18 67 31 82 50 74S68 71 81 76" fill="none" stroke="#006620" stroke-width=".5" opacity=".9"/>
+  <rect x="1" y="1" width="79.28" height="126.5" fill="none" stroke="#a06000" stroke-width=".65"/>
+  <path d="M2 9H79M2 30H79M2 50H79M40.64 50V113M2 113H79" stroke="#9f9f50" stroke-width=".4"/>
+  <path d="M2 9H48L51 12H79M2 30H79M2 50H79" stroke="#efe000" stroke-width=".6" fill="none"/>
+  <g fill="#001f00" fill-opacity=".82" stroke="#a06000" stroke-width=".35"><rect x="3" y="52" width="35" height="16"/><rect x="43" y="52" width="35" height="16"/><rect x="3" y="74" width="35" height="16"/><rect x="43" y="74" width="35" height="16"/><rect x="3" y="96" width="35" height="16"/><rect x="43" y="96" width="35" height="16"/></g>
+  <path d="M4 123H14M17 123H27M30 123H40M43 123H53M56 123H66M69 123H78" stroke="#a06000" stroke-width=".55"/>
+</svg>

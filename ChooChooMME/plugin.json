@@ -1,0 +1,18 @@
+{
+  "slug": "ChooChooMME",
+  "name": "Choo Choo MME",
+  "version": "2.0.0",
+  "license": "MIT",
+  "brand": "Choo Choo",
+  "author": "Choo Choo",
+  "pluginUrl": "https://github.com/paiheulevrai/choochoorack",
+  "sourceUrl": "https://github.com/paiheulevrai/choochoorack",
+  "modules": [
+    {
+      "slug": "ChooChooMME",
+      "name": "Choo Choo MME",
+      "description": "Multi Modulation Engine VCO",
+      "tags": ["VCO", "Oscillator", "Waveshaper"]
+    }
+  ]
+}
