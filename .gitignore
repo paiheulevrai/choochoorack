@@ -3,8 +3,10 @@
 /*.dll
 /*.vcvplugin
 .tmp
+.vscode/
 **/build/
 **/dist/
 **/*.dll
 **/*.vcvplugin
 **/*.exe
+**/compile.err
