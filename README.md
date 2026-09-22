@@ -1,6 +1,6 @@
 # Choo Choo Rack
 
-Two VCV Rack 2 modules ported from ChooChooTracker/MobileGroove.
+Two VCV Rack 2 modules ported from ChooChooTracker.
 
 ## Modules
 
