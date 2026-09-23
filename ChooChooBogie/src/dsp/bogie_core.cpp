@@ -44,6 +44,11 @@ float Core::oscillator(float frequency, int shape, int slot) {
 float Core::process() {
   if (!active_) return 0.0f;
   if (age_ >= duration_) { active_ = false; return 0.0f; }
+  static constexpr float modelGain[] = {
+    1.335575f, 1.253229f, 1.202260f, 1.352630f, 1.331551f, 1.335482f,
+    1.335162f, 1.286303f, 1.332512f, 1.084859f, 1.337063f, 1.329288f
+  };
+  const float calibration = modelGain[static_cast<int>(parameters_.model)];
   float progress = age_ / duration_;
   float fast = std::exp(-age_ / (0.006f + 0.050f * (1.0f - parameters_.tone)));
   envelope_ = std::exp(-5.5f * progress);
@@ -99,6 +104,6 @@ float Core::process() {
   }
   float drive = 1.0f + parameters_.drive * 5.5f;
   age_ += 1.0f / sampleRate_;
-  return std::tanh(sample * drive) / std::tanh(drive) * envelope_;
+  return std::tanh(sample * drive) / std::tanh(drive) * envelope_ * calibration;
 }
 }  // namespace bogie

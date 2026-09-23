@@ -36,6 +36,29 @@ int main() {
     }
   }
 
+  for (Model model : models) {
+    double previous = 0.0;
+    for (int shaper = 0; shaper < 256; ++shaper) {
+      Parameters parameters;
+      parameters.model = model;
+      parameters.shaper = shaper / 255.0f;
+      Core core;
+      core.init(48000.0f);
+      core.setFrequency(60.0f);
+      core.setParameters(parameters);
+      double energy = 0.0;
+      for (int i = 0; i < 1024; ++i) {
+        float value = core.process();
+        assert(std::isfinite(value));
+        energy += value * value;
+      }
+      energy = std::sqrt(energy / 1024.0);
+      if (previous > 1.0e-6 && energy > 1.0e-6)
+        assert(std::fabs(20.0 * std::log10(energy / previous)) < 3.0);
+      previous = energy;
+    }
+  }
+
   Core resetCore;
   resetCore.init(48000.0f);
   resetCore.setFrequency(110.0f);

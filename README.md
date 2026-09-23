@@ -1,6 +1,6 @@
 # Choo Choo Rack
 
-Two VCV Rack 2 modules ported from ChooChooTracker.
+Three VCV Rack 2 modules ported from ChooChooTracker.
 
 ## Modules
 
@@ -28,6 +28,13 @@ Cowbell, Cymbal, Shaker and Clave models. Sounds like digital drum machines.
 Parameters depend of the model. The lower half of their ranges targets conventional drum sounds, while higher
 settings open into more synthetic timbres.
 
+### Sintered — Experimental Digital Percussion
+
+A mono one-shot voice whose six models explore coupled oscillators, noise,
+short combs, bitwise logic and unstable feedback. Knot, Shard, Burst, Comb,
+Logic and Melt share Decay, Mod and Motion controls plus three model-specific
+macros. Every macro has CV input and a bipolar attenuverter.
+
 ## Install
 
 Download the Windows x64 `.vcvplugin` releases and install them with Rack's
@@ -36,7 +43,7 @@ Rack.
 
 ## Build
 
-Both plugins target Rack 2 and require the matching Rack SDK plus a MinGW64
+All three plugins target Rack 2 and require the matching Rack SDK plus a MinGW64
 toolchain on Windows.
 
 ```sh
@@ -47,13 +54,18 @@ make RACK_DIR=/path/to/Rack-SDK dist
 # Bogie
 cd ChooChooBogie
 make RACK_DIR=/path/to/Rack-SDK dist
+
+# Sintered
+cd ChooChooSintered
+make RACK_DIR=/path/to/Rack-SDK dist
 ```
 
-The standalone DSP tests are `ChooChooMME/tests/mme_core_test.cpp` and
-`ChooChooBogie/tests/bogie_core_test.cpp`.
+The standalone DSP tests are `ChooChooMME/tests/mme_core_test.cpp`,
+`ChooChooBogie/tests/bogie_core_test.cpp` and
+`ChooChooSintered/tests/sintered_core_test.cpp`.
 
 ## License and attribution
 
-MIT. Bogie is an original Choo Choo implementation. MME incorporates tracker
+MIT. Bogie and Sintered are original Choo Choo implementations. MME incorporates tracker
 adaptations of MIT-licensed Mutable Instruments Warps techniques; retained
 source notices apply.

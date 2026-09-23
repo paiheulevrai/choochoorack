@@ -112,6 +112,21 @@ float Core::process() {
   int shapeB = pair == 0 ? 0 : pair == 1 ? 0 : pair == 2 ? 1 : pair == 3 ? 2 : 3;
   float amount = parameters_.amount;
   float flow = parameters_.flow;
+  static constexpr float shaperGain[7][9] = {
+    {0.992512f, .874683f, .761782f, .721170f, .701094f, 1.011484f, 1.035431f, .415567f, .251189f},
+    {0.994402f, 1.012236f, .866559f, .779612f, .741525f, 1.011517f, 1.035429f, .415568f, .251189f},
+    {0.993494f, 1.032738f, .849110f, .776743f, .743856f, 1.011473f, 1.035431f, .415568f, .251189f},
+    {0.992148f, 1.027351f, .874872f, .798137f, .756676f, 1.011463f, 1.035428f, .415568f, .251189f},
+    {0.991767f, .964965f, .808480f, .749326f, .729518f, 1.011532f, 1.035434f, .415568f, .251189f},
+    {0.999106f, .958805f, .800955f, .755353f, .719275f, 1.011618f, 1.035429f, .415568f, .251189f},
+    {0.993601f, .889503f, .778649f, .724063f, .700066f, 1.011468f, 1.035428f, .415569f, .251189f}
+  };
+  const float shaperValue = parameters_.shaper * 255.0f;
+  const int gainIndex = shaperValue >= 255.0f ? 7 : static_cast<int>(shaperValue) / 32;
+  const float gainFraction = shaperValue >= 255.0f ? 1.0f : std::fmod(shaperValue, 32.0f) / 32.0f;
+  const float gainA = shaperGain[static_cast<int>(parameters_.model)][gainIndex];
+  const float gainB = shaperGain[static_cast<int>(parameters_.model)][gainIndex + 1];
+  const float calibration = .9856f * std::exp(std::log(gainA) + (std::log(gainB) - std::log(gainA)) * gainFraction);
   float feedbackControl = parameters_.feedback;
   float feedbackGain = feedbackControl * feedbackControl * 2.5f;
   float stepA = frequency_ / sampleRate_;
@@ -174,7 +189,7 @@ float Core::process() {
   feedback_ = (rawFeedback - feedbackDC_) * (0.72f + feedbackControl * 0.22f);
   phaseA_ = wrap(phaseA_ + stepA);
   phaseB_ = wrap(phaseB_ + stepB);
-  return sample;
+  return sample * calibration;
 }
 
 }  // namespace choochoomme
