@@ -44,6 +44,7 @@ The lower half of the parameter ranges targets conventional drum sounds, while h
 ### Sintered - Experimental Digital Percussion
 
 The percussive version of MME. Weird percussions from another world, good for IDM, noise, industrial, techno and experimentation. Very wild timbre variations. 
+Inspired by "what would happen if you make drums with unconventional algos?"
 
 - Knot: Three coupled sine oscillators tangled through phase modulation and wavefolding.
 - Shard: Feedback-driven oscillator pair crushed through aggressive folding and saturation.
