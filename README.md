@@ -2,6 +2,8 @@
 
 Three VCV Rack 2 modules ported from ChooChooTracker.
 
+![Choo Choo Rack — MME, Bogie and Sintered](capture.png)
+
 ## Modules
 
 ### MME — Multi Modulation Engine
