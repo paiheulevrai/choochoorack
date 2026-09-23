@@ -7,20 +7,25 @@ Two VCV Rack 2 modules ported from ChooChooTracker.
 ### MME — Multi Modulation Engine
 
 A mono two-oscillator VCO built around interactions between its internal
-oscillators. Choose Ring, Fold, Cross, VPM, Sync, Logic or Vocode; `Interval`
-sets their relationship. Waves selects paired oscillator shapes, Amount drives
-the core interaction, Flow changes its direction or variant, Feedback ranges
-from subtle to deliberately unruly, and Shaper goes from clean through
-saturation to wavefolding. Each macro has CV input and a bipolar attenuverter.
+oscillators. Inspired by Noise Engineering and Mutable Warps.
+
+Good for dirty gritty sounds, unstable modulations, techno, noise and industrial.
+
+Parameters:
+- Models: Ring, Fold, Cross, VPM, Sync, Logic or Vocode. Different types of modulations
+- Intervals sets the oscillators relationship
+- Waves selects paired oscillator shapes
+- Amount set the strength of the oscillators interaction
+- Flow changes the direction/variant of the interatction
+- Feedback : from subtle to deliberately unruly
+- Shaper : from clean through saturation to wavefolding
 
 ### Bogie — Drum Synth
 
 A mono, one-shot drum voice with Kick, Snare, Hat, Clap, Tom, Rim, FM, Noise,
-Cowbell, Cymbal, Shaker and Clave models. Trigger retriggers the voice; V/Oct,
-six macro CV inputs and their attenuverters support modular sequencing. Its
-six macros are Decay, Tone, Sweep, Noise, FM and Drive; their displayed names
-adapt per model, such as `Click` for a Kick or `Crossmod` for a Cowbell. The
-lower half of their ranges targets conventional drum sounds, while higher
+Cowbell, Cymbal, Shaker and Clave models. Sounds like digital drum machines.
+
+Parameters depend of the model. The lower half of their ranges targets conventional drum sounds, while higher
 settings open into more synthetic timbres.
 
 ## Install
