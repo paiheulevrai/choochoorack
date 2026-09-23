@@ -1,12 +1,12 @@
 # Choo Choo Rack
 
-Three VCV Rack 2 modules ported from ChooChooTracker.
+Three VCV Rack 2 modules, ported from ChooChooTracker.
 
 ![Choo Choo Rack — MME, Bogie and Sintered](capture.png)
 
 ## Modules
 
-### MME — Multi Modulation Engine
+### MME - Multi Modulation VCO engine
 
 A mono two-oscillator VCO built around interactions between its internal
 oscillators. Inspired by Noise Engineering and Mutable Warps.
@@ -22,20 +22,35 @@ Parameters:
 - Feedback : from subtle to deliberately unruly
 - Shaper : from clean through saturation to wavefolding
 
-### Bogie — Drum Synth
+### Bogie - Drum Synth
 
-A mono, one-shot drum voice with Kick, Snare, Hat, Clap, Tom, Rim, FM, Noise,
-Cowbell, Cymbal, Shaker and Clave models. Sounds like digital drum machines.
+A kit of engines that sound like digital drum machines. Inspired by the Machinedrum. General purpose synthetic drums.
 
-Parameters depend of the model. The lower half of their ranges targets conventional drum sounds, while higher
-settings open into more synthetic timbres.
+- Kick: Pitch-swept sine body with a modulated harmonic and a short noise transient.
+- Snare: Two pitched resonators blended with bright, filtered noise.
+- Hat: Six inharmonic square oscillators with staggered decays and a noise layer.
+- Clap: Filtered noise shaped into three rapid bursts, with an optional tonal click.
+- Tom: Dual sine resonator with pitch sweep, FM overtones and a brief noise attack.
+- Rim: Short triangle-and-sine resonator sharpened by a fast noise transient.
+- FM: Sine carrier driven by decaying audio-rate frequency modulation.
+- Noise: Variable blend of bright and dark filtered noise with a tonal trace.
+- Cowbell: Two inharmonic square oscillators with cross-modulation and metallic detuning.
+- Cymbal: Six detuned square partials with staggered envelopes and broadband noise.
+- Shaker: Bright noise animated by low-frequency amplitude modulation and a pitched tick.
+- Clave: High-ratio triangle and sine resonators shaped into a short wooden impulse.
 
-### Sintered — Experimental Digital Percussion
+The lower half of the parameter ranges targets conventional drum sounds, while higher settings open into more synthetic timbres.
 
-A mono one-shot voice whose six models explore coupled oscillators, noise,
-short combs, bitwise logic and unstable feedback. Knot, Shard, Burst, Comb,
-Logic and Melt share Decay, Mod and Motion controls plus three model-specific
-macros. Every macro has CV input and a bipolar attenuverter.
+### Sintered - Experimental Digital Percussion
+
+The percussive version of MME. Weird percussions from another world, good for IDM, noise, industrial, techno and experimentation. Very wild timbre variations. 
+
+- Knot: Three coupled sine oscillators tangled through phase modulation and wavefolding.
+- Shard: Feedback-driven oscillator pair crushed through aggressive folding and saturation.
+- Burst: Colored noise and a pitched resonator injected into a regenerative wavefolder.
+- Comb: Oscillator-and-noise excitation fed into a short, unstable comb resonator.
+- Logic: Quantized oscillators combined with XOR, AND, OR or comparator logic, then folded.
+- Melt: Feedback-warped frequency modulation pushed through soft saturation and noisy instability.
 
 ## Install
 
