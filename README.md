@@ -1,15 +1,23 @@
 # Choo Choo Rack
 
 One VCV Rack 2 plugin containing three modules, ported from ChooChooTracker:
-MME, Bogie and Sintered. Plugin slug: `ChooChooRack`, version `2.0.1`.
+MME, Bogie and Sintered. Plugin slug: `ChooChooRack`, version `2.0.2`.
 
 ![Choo Choo Rack — MME, Bogie and Sintered](capture.png)
 
 ## Modules
 
+All three modules support VCV polyphonic cables with up to 16 independent voices.
+The input with the most channels sets the output channel count (at least one).
+Pitch, trigger/reset and macro CV are processed per channel. A monophonic input
+is shared by every voice; missing channels on a polyphonic input receive 0 V.
+Knobs and model selection apply to all voices. For a chord, patch polyphonic
+V/OCT into MME; for percussion, also patch gates/triggers into Bogie or Sintered.
+Use a polyphonic audio chain or VCV Sum to mix the output to mono.
+
 ### MME - Multi Modulation VCO engine
 
-A mono two-oscillator VCO built around interactions between its internal
+A two-oscillator VCO built around interactions between its internal
 oscillators. Inspired by Noise Engineering and Mutable Warps.
 
 Good for dirty gritty sounds, unstable modulations, techno, noise and industrial.
@@ -60,7 +68,7 @@ center, a short swell on the negative side and an exponential fall on the positi
 
 ## Install
 
-Download `ChooChooRack-2.0.1-win-x64.vcvplugin` from the GitHub releases,
+Download `ChooChooRack-2.0.2-win-x64.vcvplugin` from the GitHub releases,
 copy it to Rack's user folder under `plugins-win-x64`, then restart Rack.
 On Windows the default location is `%LOCALAPPDATA%/Rack2/plugins-win-x64`.
 All three modules are included in this single package.
@@ -80,10 +88,17 @@ make RACK_DIR=/path/to/Rack-SDK dist
 make RACK_DIR=/path/to/Rack-SDK test
 ```
 
+The module integration test also needs Rack's runtime library. If it is not in
+your SDK or library search path, pass `RACK_RUNTIME_DIR=/path/to/Rack` to `make test`.
+On Windows, for example: `RACK_RUNTIME_DIR="/c/Program Files/VCV/Rack2Free"`.
+
 The standalone DSP tests are [MME](tests/mme_core_test.cpp),
 [Bogie](tests/bogie_core_test.cpp) and [Sintered](tests/sintered_core_test.cpp).
 They cover all models at 44.1, 48 and 96 kHz, percussion tails and macro response,
 MME waveform morphing, Sintered Motion continuity and retriggering.
+The [polyphony integration test](tests/polyphony_test.cpp) compares every output
+channel against a separate mono module for all 26 algorithms and verifies mono
+input sharing, per-channel CV/triggers, and removal/restoration of voices.
 
 The DSP port follows `chipnomad_lib/synth/mme_voice.cpp`, `drum_synth_voice.cpp`
 and `sintered_voice.cpp` in ChooChooTracker. Tracker-specific envelopes, filters

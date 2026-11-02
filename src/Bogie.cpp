@@ -36,8 +36,9 @@ struct Bogie : Module {
   enum InputIds { VOCT_INPUT, TRIG_INPUT, DECAY_INPUT, TONE_INPUT, SWEEP_INPUT, NOISE_INPUT, FM_INPUT, DRIVE_INPUT, NUM_INPUTS };
   enum OutputIds { AUDIO_OUTPUT, NUM_OUTPUTS };
 
-  Core core;
-  dsp::SchmittTrigger trigger;
+  Core cores[PORT_MAX_CHANNELS];
+  dsp::SchmittTrigger triggers[PORT_MAX_CHANNELS];
+  int activeChannels = 1;
 
   Bogie() {
     config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS);
@@ -53,26 +54,42 @@ struct Bogie : Module {
     configInput(VOCT_INPUT, "V/Oct"); configInput(TRIG_INPUT, "Trigger");
     for (int i = 0; i < 6; ++i) configInput(DECAY_INPUT + i, std::string(names[i]) + " CV");
     configOutput(AUDIO_OUTPUT, "Audio");
-    core.init(48000.0f);
+    for (auto& core : cores) core.init(48000.0f);
+    for (auto& trigger : triggers) trigger.process(0.0f);
   }
-  void onSampleRateChange(const SampleRateChangeEvent& event) override { core.init(event.sampleRate); }
+  void onSampleRateChange(const SampleRateChangeEvent& event) override {
+    for (auto& core : cores) core.init(event.sampleRate);
+  }
   void process(const ProcessArgs& args) override {
-    Parameters parameters;
-    parameters.model = modelFromValue(params[MODEL_PARAM].getValue());
-    parameters.decay = macroValue(DECAY_PARAM, DECAY_INPUT, DECAY_ATTEN_PARAM);
-    parameters.tone = macroValue(TONE_PARAM, TONE_INPUT, TONE_ATTEN_PARAM);
-    parameters.sweep = macroValue(SWEEP_PARAM, SWEEP_INPUT, SWEEP_ATTEN_PARAM);
-    parameters.noise = macroValue(NOISE_PARAM, NOISE_INPUT, NOISE_ATTEN_PARAM);
-    parameters.fm = macroValue(FM_PARAM, FM_INPUT, FM_ATTEN_PARAM);
-    parameters.drive = macroValue(DRIVE_PARAM, DRIVE_INPUT, DRIVE_ATTEN_PARAM);
-    core.setParameters(parameters);
-    core.setFrequency(261.625565f * std::pow(2.0f, params[PITCH_PARAM].getValue() + inputs[VOCT_INPUT].getVoltage()));
-    if (trigger.process(inputs[TRIG_INPUT].getVoltage())) core.trigger();
-    outputs[AUDIO_OUTPUT].setVoltage(5.0f * core.process());
+    int channels = 1;
+    for (auto& input : inputs) channels = std::max(channels, input.getChannels());
+    for (int channel = channels; channel < activeChannels; ++channel) {
+      cores[channel] = Core{};
+      cores[channel].init(args.sampleRate);
+      triggers[channel].reset();
+      triggers[channel].process(0.0f);
+    }
+    activeChannels = channels;
+    outputs[AUDIO_OUTPUT].setChannels(channels);
+    for (int channel = 0; channel < channels; ++channel) {
+      Parameters parameters;
+      parameters.model = modelFromValue(params[MODEL_PARAM].getValue());
+      parameters.decay = macroValue(DECAY_PARAM, DECAY_INPUT, DECAY_ATTEN_PARAM, channel);
+      parameters.tone = macroValue(TONE_PARAM, TONE_INPUT, TONE_ATTEN_PARAM, channel);
+      parameters.sweep = macroValue(SWEEP_PARAM, SWEEP_INPUT, SWEEP_ATTEN_PARAM, channel);
+      parameters.noise = macroValue(NOISE_PARAM, NOISE_INPUT, NOISE_ATTEN_PARAM, channel);
+      parameters.fm = macroValue(FM_PARAM, FM_INPUT, FM_ATTEN_PARAM, channel);
+      parameters.drive = macroValue(DRIVE_PARAM, DRIVE_INPUT, DRIVE_ATTEN_PARAM, channel);
+      Core& core = cores[channel];
+      core.setParameters(parameters);
+      core.setFrequency(261.625565f * std::pow(2.0f, params[PITCH_PARAM].getValue() + inputs[VOCT_INPUT].getPolyVoltage(channel)));
+      if (triggers[channel].process(inputs[TRIG_INPUT].getPolyVoltage(channel))) core.trigger();
+      outputs[AUDIO_OUTPUT].setVoltage(5.0f * core.process(), channel);
+    }
   }
  private:
-  float macroValue(ParamIds parameter, InputIds input, ParamIds attenuverter) {
-    return limit(params[parameter].getValue() + inputs[input].getVoltage() * 0.1f * params[attenuverter].getValue(), 0.0f, 1.0f);
+  float macroValue(ParamIds parameter, InputIds input, ParamIds attenuverter, int channel) {
+    return limit(params[parameter].getValue() + inputs[input].getPolyVoltage(channel) * 0.1f * params[attenuverter].getValue(), 0.0f, 1.0f);
   }
 };
 

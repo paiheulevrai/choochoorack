@@ -62,8 +62,9 @@ struct ChooChooMME : Module {
     NUM_OUTPUTS
   };
 
-  Core core;
-  dsp::SchmittTrigger trigger;
+  Core cores[PORT_MAX_CHANNELS];
+  dsp::SchmittTrigger triggers[PORT_MAX_CHANNELS];
+  int activeChannels = 1;
 
   ChooChooMME() {
     config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS);
@@ -91,36 +92,50 @@ struct ChooChooMME : Module {
     configInput(FEEDBACK_INPUT, "Feedback CV");
     configInput(SHAPER_INPUT, "Shaper CV");
     configOutput(VCO_OUTPUT, "VCO");
-    core.init(48000.0f);
+    for (auto& core : cores) core.init(48000.0f);
+    for (auto& trigger : triggers) trigger.process(0.0f);
   }
 
   void onSampleRateChange(const SampleRateChangeEvent& event) override {
-    core.init(event.sampleRate);
+    for (auto& core : cores) core.init(event.sampleRate);
   }
 
   void process(const ProcessArgs& args) override {
-    if (inputs[TRIG_INPUT].isConnected() && trigger.process(inputs[TRIG_INPUT].getVoltage()))
-      core.reset();
+    int channels = 1;
+    for (auto& input : inputs) channels = std::max(channels, input.getChannels());
+    for (int channel = channels; channel < activeChannels; ++channel) {
+      cores[channel] = Core{};
+      cores[channel].init(args.sampleRate);
+      triggers[channel].reset();
+      triggers[channel].process(0.0f);
+    }
+    activeChannels = channels;
+    outputs[VCO_OUTPUT].setChannels(channels);
+    for (int channel = 0; channel < channels; ++channel) {
+      Core& core = cores[channel];
+      if (triggers[channel].process(inputs[TRIG_INPUT].getPolyVoltage(channel)))
+        core.reset();
 
-    Parameters parameters;
-    parameters.model = modelFromValue(params[MODEL_PARAM].getValue());
-    parameters.waves = cvValue(WAVES_PARAM, WAVES_INPUT, WAVES_ATTEN_PARAM);
-    parameters.interval = cvValue(INTERVAL_PARAM, INTERVAL_INPUT, INTERVAL_ATTEN_PARAM);
-    parameters.amount = cvValue(AMOUNT_PARAM, AMOUNT_INPUT, AMOUNT_ATTEN_PARAM);
-    parameters.flow = cvValue(FLOW_PARAM, FLOW_INPUT, FLOW_ATTEN_PARAM);
-    parameters.feedback = cvValue(FEEDBACK_PARAM, FEEDBACK_INPUT, FEEDBACK_ATTEN_PARAM);
-    parameters.shaper = cvValue(SHAPER_PARAM, SHAPER_INPUT, SHAPER_ATTEN_PARAM);
-    core.setFrequency(261.625565f * std::pow(2.0f, params[PITCH_PARAM].getValue() +
-        (inputs[VOCT_INPUT].isConnected() ? inputs[VOCT_INPUT].getVoltage() : 0.0f)));
-    core.setParameters(parameters);
-    outputs[VCO_OUTPUT].setVoltage(5.0f * core.process());
+      Parameters parameters;
+      parameters.model = modelFromValue(params[MODEL_PARAM].getValue());
+      parameters.waves = cvValue(WAVES_PARAM, WAVES_INPUT, WAVES_ATTEN_PARAM, channel);
+      parameters.interval = cvValue(INTERVAL_PARAM, INTERVAL_INPUT, INTERVAL_ATTEN_PARAM, channel);
+      parameters.amount = cvValue(AMOUNT_PARAM, AMOUNT_INPUT, AMOUNT_ATTEN_PARAM, channel);
+      parameters.flow = cvValue(FLOW_PARAM, FLOW_INPUT, FLOW_ATTEN_PARAM, channel);
+      parameters.feedback = cvValue(FEEDBACK_PARAM, FEEDBACK_INPUT, FEEDBACK_ATTEN_PARAM, channel);
+      parameters.shaper = cvValue(SHAPER_PARAM, SHAPER_INPUT, SHAPER_ATTEN_PARAM, channel);
+      core.setFrequency(261.625565f * std::pow(2.0f, params[PITCH_PARAM].getValue() +
+          inputs[VOCT_INPUT].getPolyVoltage(channel)));
+      core.setParameters(parameters);
+      outputs[VCO_OUTPUT].setVoltage(5.0f * core.process(), channel);
+    }
   }
 
  private:
-  float cvValue(ParamIds parameter, InputIds input, ParamIds attenuverter) {
+  float cvValue(ParamIds parameter, InputIds input, ParamIds attenuverter, int channel) {
     float value = params[parameter].getValue();
     if (inputs[input].isConnected())
-      value += inputs[input].getVoltage() / 10.0f * params[attenuverter].getValue();
+      value += inputs[input].getPolyVoltage(channel) / 10.0f * params[attenuverter].getValue();
     return limit(value, 0.0f, 1.0f);
   }
 };

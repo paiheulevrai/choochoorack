@@ -37,8 +37,9 @@ struct Sintered : Module {
   enum InputIds { VOCT_INPUT, TRIG_INPUT, DECAY_INPUT, MOD_INPUT, A_INPUT, B_INPUT, MOTION_INPUT, C_INPUT, NUM_INPUTS };
   enum OutputIds { AUDIO_OUTPUT, NUM_OUTPUTS };
 
-  Core core;
-  dsp::SchmittTrigger trigger;
+  Core cores[PORT_MAX_CHANNELS];
+  dsp::SchmittTrigger triggers[PORT_MAX_CHANNELS];
+  int activeChannels = 1;
 
   Sintered() {
     config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS);
@@ -53,29 +54,45 @@ struct Sintered : Module {
     }
     configParam(LEVEL_PARAM, 0.0f, 1.0f, 1.0f, "Legacy level");
     configInput(VOCT_INPUT, "V/Oct"); configInput(TRIG_INPUT, "Trigger"); configOutput(AUDIO_OUTPUT, "Audio");
-    core.init(48000.0f);
+    for (auto& core : cores) core.init(48000.0f);
+    for (auto& trigger : triggers) trigger.process(0.0f);
   }
 
-  void onSampleRateChange(const SampleRateChangeEvent& event) override { core.init(event.sampleRate); }
+  void onSampleRateChange(const SampleRateChangeEvent& event) override {
+    for (auto& core : cores) core.init(event.sampleRate);
+  }
 
   void process(const ProcessArgs& args) override {
-    Parameters parameters;
-    parameters.model = modelFromValue(params[MODEL_PARAM].getValue());
-    parameters.decay = macroValue(DECAY_PARAM, DECAY_INPUT, DECAY_ATTEN_PARAM);
-    parameters.mod = macroValue(MOD_PARAM, MOD_INPUT, MOD_ATTEN_PARAM);
-    parameters.a = macroValue(A_PARAM, A_INPUT, A_ATTEN_PARAM);
-    parameters.b = macroValue(B_PARAM, B_INPUT, B_ATTEN_PARAM);
-    parameters.motion = macroValue(MOTION_PARAM, MOTION_INPUT, MOTION_ATTEN_PARAM);
-    parameters.c = macroValue(C_PARAM, C_INPUT, C_ATTEN_PARAM);
-    core.setParameters(parameters);
-    core.setFrequency(261.625565f * std::pow(2.0f, params[PITCH_PARAM].getValue() + inputs[VOCT_INPUT].getVoltage()));
-    if (trigger.process(inputs[TRIG_INPUT].getVoltage())) core.trigger();
-    outputs[AUDIO_OUTPUT].setVoltage(5.0f * core.process());
+    int channels = 1;
+    for (auto& input : inputs) channels = std::max(channels, input.getChannels());
+    for (int channel = channels; channel < activeChannels; ++channel) {
+      cores[channel] = Core{};
+      cores[channel].init(args.sampleRate);
+      triggers[channel].reset();
+      triggers[channel].process(0.0f);
+    }
+    activeChannels = channels;
+    outputs[AUDIO_OUTPUT].setChannels(channels);
+    for (int channel = 0; channel < channels; ++channel) {
+      Parameters parameters;
+      parameters.model = modelFromValue(params[MODEL_PARAM].getValue());
+      parameters.decay = macroValue(DECAY_PARAM, DECAY_INPUT, DECAY_ATTEN_PARAM, channel);
+      parameters.mod = macroValue(MOD_PARAM, MOD_INPUT, MOD_ATTEN_PARAM, channel);
+      parameters.a = macroValue(A_PARAM, A_INPUT, A_ATTEN_PARAM, channel);
+      parameters.b = macroValue(B_PARAM, B_INPUT, B_ATTEN_PARAM, channel);
+      parameters.motion = macroValue(MOTION_PARAM, MOTION_INPUT, MOTION_ATTEN_PARAM, channel);
+      parameters.c = macroValue(C_PARAM, C_INPUT, C_ATTEN_PARAM, channel);
+      Core& core = cores[channel];
+      core.setParameters(parameters);
+      core.setFrequency(261.625565f * std::pow(2.0f, params[PITCH_PARAM].getValue() + inputs[VOCT_INPUT].getPolyVoltage(channel)));
+      if (triggers[channel].process(inputs[TRIG_INPUT].getPolyVoltage(channel))) core.trigger();
+      outputs[AUDIO_OUTPUT].setVoltage(5.0f * core.process(), channel);
+    }
   }
 
  private:
-  float macroValue(ParamIds parameter, InputIds input, ParamIds attenuverter) {
-    return limit(params[parameter].getValue() + inputs[input].getVoltage() * 0.1f * params[attenuverter].getValue(), 0.0f, 1.0f);
+  float macroValue(ParamIds parameter, InputIds input, ParamIds attenuverter, int channel) {
+    return limit(params[parameter].getValue() + inputs[input].getPolyVoltage(channel) * 0.1f * params[attenuverter].getValue(), 0.0f, 1.0f);
   }
 };
 
