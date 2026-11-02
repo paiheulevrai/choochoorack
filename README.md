@@ -66,6 +66,12 @@ Inspired by "what would happen if you make drums with unconventional algos?"
 Motion controls the depth and timing of model-specific modulation, with a neutral
 center, a short swell on the negative side and an exponential fall on the positive side.
 
+## Demo patch
+
+[Les Forges du Brouillard](patches/README.md) is a self-running ambient/industrial
+installation at 104 BPM. All sound generators are ChooChooRack modules, with
+polyphonic drones, heavy percussion and evolving stereo effects.
+
 ## Install
 
 Download `ChooChooRack-2.0.2-win-x64.vcvplugin` from the GitHub releases,
