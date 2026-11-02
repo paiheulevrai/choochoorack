@@ -67,6 +67,17 @@ float Core::oscillator(float phase, int shape) const {
   }
 }
 
+float Core::pairedOscillator(float phase, bool oscillatorB, float pairPosition) const {
+  static constexpr int shapes[5][2] = {
+    {0, 0}, {1, 0}, {2, 1}, {0, 2}, {3, 3}
+  };
+  int pair = static_cast<int>(pairPosition);
+  if (pair >= 4) return oscillator(phase, shapes[4][oscillatorB]);
+  float blend = pairPosition - pair;
+  float from = oscillator(phase, shapes[pair][oscillatorB]);
+  return from + (oscillator(phase, shapes[pair + 1][oscillatorB]) - from) * blend;
+}
+
 float Core::diode(float value) const {
   float sign = value > 0.0f ? 1.0f : -1.0f;
   float dead = std::fabs(value) - 0.667f;
@@ -107,9 +118,7 @@ float Core::vocode(float modulator, float carrier) {
 float Core::process() {
   float interval = (parameters_.interval - 0.5f) * 4.0f;
   float ratio = std::pow(2.0f, interval);
-  int pair = static_cast<int>(parameters_.waves * 5.0f);
-  int shapeA = pair == 0 ? 0 : pair == 1 ? 1 : pair == 2 ? 2 : pair == 3 ? 0 : 3;
-  int shapeB = pair == 0 ? 0 : pair == 1 ? 0 : pair == 2 ? 1 : pair == 3 ? 2 : 3;
+  float pairPosition = parameters_.waves * 4.0f;
   float amount = parameters_.amount;
   float flow = parameters_.flow;
   static constexpr float shaperGain[7][9] = {
@@ -137,8 +146,8 @@ float Core::process() {
     phaseB_ += (flow - phaseB_) * amount;
 
   float injected = feedback_ * feedbackGain;
-  float a = std::tanh(oscillator(phaseA_, shapeA) + injected * (0.35f + 0.75f * flow));
-  float b = std::tanh(oscillator(phaseB_, shapeB) - injected * (1.10f - 0.50f * flow));
+  float a = std::tanh(pairedOscillator(phaseA_, false, pairPosition) + injected * (0.35f + 0.75f * flow));
+  float b = std::tanh(pairedOscillator(phaseB_, true, pairPosition) - injected * (1.10f - 0.50f * flow));
   float sample = 0.0f;
 
   switch (parameters_.model) {
@@ -155,19 +164,19 @@ float Core::process() {
       break;
     }
     case Model::Cross: {
-      float ab = oscillator(phaseA_ + (b + feedback_) * amount * 0.28f, shapeA);
-      float ba = oscillator(phaseB_ + (a + feedback_) * amount * 0.28f, shapeB);
+      float ab = pairedOscillator(phaseA_ + (b + feedback_) * amount * 0.28f, false, pairPosition);
+      float ba = pairedOscillator(phaseB_ + (a + feedback_) * amount * 0.28f, true, pairPosition);
       sample = ab + (ba - ab) * flow;
       break;
     }
     case Model::Vpm: {
-      float ab = oscillator(phaseA_ + (b + feedback_) * amount * 0.45f, shapeA);
-      float ba = oscillator(phaseB_ + (a + feedback_) * amount * 0.45f, shapeB);
+      float ab = pairedOscillator(phaseA_ + (b + feedback_) * amount * 0.45f, false, pairPosition);
+      float ba = pairedOscillator(phaseB_ + (a + feedback_) * amount * 0.45f, true, pairPosition);
       sample = ab + (ba - ab) * flow;
       break;
     }
     case Model::Sync:
-      sample = oscillator(phaseB_, shapeB) + a * (amount * 0.18f);
+      sample = pairedOscillator(phaseB_, true, pairPosition) + a * (amount * 0.18f);
       break;
     case Model::Logic: {
       int16_t ia = static_cast<int16_t>(a * 32767.0f);

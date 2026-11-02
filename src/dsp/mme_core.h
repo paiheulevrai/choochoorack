@@ -34,6 +34,7 @@ class Core {
 
  private:
   float oscillator(float phase, int shape) const;
+  float pairedOscillator(float phase, bool oscillatorB, float pairPosition) const;
   float diode(float value) const;
   float shape(float value) const;
   float vocode(float modulator, float carrier);

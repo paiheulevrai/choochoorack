@@ -1,0 +1,31 @@
+{
+  "slug": "ChooChooRack",
+  "name": "Choo Choo Rack",
+  "version": "2.0.1",
+  "license": "MIT",
+  "brand": "Choo Choo",
+  "author": "Choo Choo",
+  "pluginUrl": "https://github.com/paiheulevrai/choochoorack",
+  "sourceUrl": "https://github.com/paiheulevrai/choochoorack",
+  "manualUrl": "https://github.com/paiheulevrai/choochoorack#modules",
+  "modules": [
+    {
+      "slug": "ChooChooMME",
+      "name": "Choo Choo MME",
+      "description": "Multi Modulation Engine VCO",
+      "tags": ["VCO", "Oscillator", "Waveshaper"]
+    },
+    {
+      "slug": "Bogie",
+      "name": "Bogie",
+      "description": "Twelve-model one-shot drum synthesizer",
+      "tags": ["Drum", "Drum synth", "Percussion"]
+    },
+    {
+      "slug": "Sintered",
+      "name": "Sintered",
+      "description": "Seven-model experimental digital percussion voice",
+      "tags": ["Drum", "Percussion", "Physical modeling"]
+    }
+  ]
+}

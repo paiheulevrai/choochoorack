@@ -4,5 +4,7 @@ Plugin* pluginInstance;
 
 void init(Plugin* plugin) {
   pluginInstance = plugin;
+  plugin->addModel(modelChooChooMME);
   plugin->addModel(modelBogie);
+  plugin->addModel(modelSintered);
 }

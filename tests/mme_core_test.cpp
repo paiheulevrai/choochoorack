@@ -59,6 +59,38 @@ int main() {
     }
   }
 
+  // Adjacent Waves values must morph, including across the old pair boundaries.
+  for (Model model : {Model::Cross, Model::Vpm}) {
+    for (float boundary : {.2f, .25f, .4f, .5f, .6f, .75f, .8f, 1.0f}) {
+      Parameters parameters;
+      parameters.model = model;
+      parameters.amount = 0.0f;
+      parameters.waves = boundary - .0001f;
+      Core a, b;
+      a.init(48000.0f); b.init(48000.0f);
+      a.setParameters(parameters);
+      parameters.waves = boundary;
+      b.setParameters(parameters);
+      float difference = 0.0f;
+      for (int i = 0; i < 1024; ++i)
+        difference += std::fabs(a.process() - b.process());
+      assert(difference < 2.0f);
+    }
+  }
+
+  Core morphA, morphB;
+  Parameters morph;
+  morph.model = Model::Cross;
+  morph.amount = 0.0f;
+  morph.waves = .1f;
+  morphA.init(48000.0f); morphB.init(48000.0f);
+  morphA.setParameters(morph);
+  morph.waves = .15f;
+  morphB.setParameters(morph);
+  float morphDifference = 0.0f;
+  for (int i = 0; i < 1024; ++i) morphDifference += std::fabs(morphA.process() - morphB.process());
+  assert(morphDifference > .01f);
+
   Core resetCore;
   resetCore.init(48000.0f);
   resetCore.setFrequency(110.0f);

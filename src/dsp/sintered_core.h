@@ -5,7 +5,7 @@
 
 namespace sintered {
 
-enum class Model { Knot, Shard, Burst, Comb, Logic, Melt };
+enum class Model { Knot, Shard, Burst, Comb, Logic, Melt, Squall };
 
 struct Parameters {
   Model model = Model::Knot;
@@ -28,6 +28,7 @@ class Core {
 
  private:
   float oscillator(float frequency, int slot);
+  float saw(float frequency, int slot);
   float random();
 
   Parameters parameters_{};
@@ -36,7 +37,7 @@ class Core {
   float age_ = 0.0f;
   float duration_ = 0.1f;
   float amplitude_ = 0.0f;
-  std::array<float, 3> phase_{};
+  std::array<float, 5> phase_{};
   float feedback_ = 0.0f;
   float dc_ = 0.0f;
   float noiseLow_ = 0.0f;

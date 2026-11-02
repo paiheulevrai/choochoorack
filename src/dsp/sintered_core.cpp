@@ -8,7 +8,7 @@ namespace {
 constexpr float kPi = 3.14159265358979323846f;
 float clamp(float value) { return std::max(0.0f, std::min(value, 1.0f)); }
 float fold(float value) { return std::fabs(std::fmod(value + 1.0f, 4.0f) - 2.0f) - 1.0f; }
-int modelIndex(Model model) { return std::max(0, std::min(static_cast<int>(model), 5)); }
+int modelIndex(Model model) { return std::max(0, std::min(static_cast<int>(model), 6)); }
 }
 
 void Core::init(float sampleRate) {
@@ -40,7 +40,7 @@ void Core::trigger() {
   randomState_ = 0x53494e54u;
   phase_.fill(0.0f);
   comb_.fill(0.0f);
-  static const float tails[] = {.85f, .70f, .48f, 1.10f, .42f, .80f};
+  static const float tails[] = {.85f, .70f, .48f, 1.10f, .42f, .80f, .85f};
   duration_ = .018f + parameters_.decay * parameters_.decay * tails[modelIndex(parameters_.model)];
 }
 
@@ -55,20 +55,37 @@ float Core::oscillator(float frequency, int slot) {
   return std::sin(2.0f * kPi * phase_[slot]);
 }
 
+float Core::saw(float frequency, int slot) {
+  float increment = std::min(.45f, std::max(1.0f / sampleRate_, frequency / sampleRate_));
+  phase_[slot] += increment;
+  phase_[slot] -= std::floor(phase_[slot]);
+  float value = 2.0f * phase_[slot] - 1.0f;
+  if (phase_[slot] < increment) {
+    float t = phase_[slot] / increment;
+    value -= t + t - t * t - 1.0f;
+  } else if (phase_[slot] > 1.0f - increment) {
+    float t = (phase_[slot] - 1.0f) / increment;
+    value -= t * t + t + t + 1.0f;
+  }
+  return value;
+}
+
 float Core::process() {
   if (!active_ || age_ >= duration_) {
     active_ = false;
     return 0.0f;
   }
 
-  static constexpr float modelGain[] = {1.822647f, 1.995262f, 1.995262f, 1.995262f, 1.995262f, 1.995262f};
+  static constexpr float modelGain[] = {1.822647f, 1.995262f, 1.995262f, 1.995262f, 1.995262f, 1.995262f, .75f};
   const float calibration = modelGain[modelIndex(parameters_.model)];
   float mod = parameters_.mod, a = parameters_.a, b = parameters_.b, c = parameters_.c;
-  float motion = (parameters_.motion * 255.0f - 128.0f) / 127.0f;
+  float motion = (parameters_.motion * 255.0f - 128.0f) / 128.0f;
+  float motionDepth = std::fabs(motion);
   if (std::fabs(motion) > 1.0e-5f) {
-    float motionTime = .008f + (1.0f - std::min(std::fabs(motion), 1.0f)) * .35f;
+    float motionTime = .012f + motionDepth * .08f;
     float x = age_ / motionTime;
-    float movement = motion < 0.0f ? (x < 1.0f ? std::sin(kPi * x) : 0.0f) : std::exp(-6.0f * x);
+    float envelope = motion < 0.0f ? (x < 1.0f ? std::sin(kPi * x) : 0.0f) : std::exp(-3.0f * x);
+    float movement = envelope * motionDepth * 1.75f;
     switch (parameters_.model) {
       case Model::Knot: mod = clamp(mod + movement * .65f); c = clamp(c + movement * .55f); break;
       case Model::Shard: b = clamp(b + movement * .65f); c = clamp(c + movement * .55f); break;
@@ -76,6 +93,7 @@ float Core::process() {
       case Model::Comb: b = clamp(b + movement * .45f); c = clamp(c + movement * .55f); break;
       case Model::Logic: a = clamp(a + movement * .60f); c = clamp(c + movement * .70f); break;
       case Model::Melt: b = clamp(b + movement * .70f); c = clamp(c + movement * .60f); break;
+      case Model::Squall: mod = clamp(mod + movement * .65f); break;
     }
   }
 
@@ -127,10 +145,23 @@ float Core::process() {
       sample = std::tanh(warped * (1.0f + c * 13.0f) + bright * mod * b);
       break;
     }
+    case Model::Squall: {
+      int voices = 3 + static_cast<int>(parameters_.b * 2.99f);
+      float spread = .02f + parameters_.a * 2.5f;
+      float fm = noise * mod * 2.5f;
+      float swarm = 0.0f;
+      for (int voice = 0; voice < voices; ++voice) {
+        float position = 2.0f * voice / (voices - 1) - 1.0f;
+        float frequency = frequency_ * std::pow(2.0f, position * spread / 12.0f);
+        swarm += saw(std::max(1.0f, frequency * (1.0f + fm)), voice);
+      }
+      sample = swarm / std::sqrt(static_cast<float>(voices));
+      break;
+    }
   }
 
   float impact = bright * std::exp(-age_ / (.0015f + .006f * (1.0f - b)));
-  static const float impactMix[] = {.22f, .18f, .72f, .38f, .24f, .16f};
+  static const float impactMix[] = {.22f, .18f, .72f, .38f, .24f, .16f, .16f};
   sample += impact * impactMix[modelIndex(parameters_.model)] * (.25f + .75f * mod);
   float raw = std::tanh(sample + feedback_ * (.2f + mod * 1.4f));
   dc_ += .02f * (raw - dc_);
@@ -138,7 +169,10 @@ float Core::process() {
   feedback_ += (target - feedback_) * (.025f + .10f * (1.0f - c));
   amplitude_ = std::exp(-5.5f * age_ / duration_);
   age_ += 1.0f / sampleRate_;
-  return std::tanh(std::tanh(sample) * amplitude_ * calibration);
+  float processed = std::tanh(sample) * amplitude_ * calibration;
+  if (parameters_.model == Model::Squall)
+    processed = std::tanh(processed * (1.0f + c * 15.0f));
+  return std::tanh(processed);
 }
 
 }  // namespace sintered

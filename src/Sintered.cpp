@@ -10,21 +10,22 @@ using sintered::Parameters;
 using SinteredModel = sintered::Model;
 
 float limit(float value, float low, float high) { return std::max(low, std::min(value, high)); }
-int modelIndex(float value) { return static_cast<int>(std::round(limit(value, 0.0f, 5.0f))); }
+int modelIndex(float value) { return static_cast<int>(std::round(limit(value, 0.0f, 6.0f))); }
 SinteredModel modelFromValue(float value) { return static_cast<SinteredModel>(modelIndex(value)); }
 const char* modelName(int model) {
-  static const char* const names[] = {"KNOT", "SHARD", "BURST", "COMB", "LOGIC", "MELT"};
-  return names[std::max(0, std::min(model, 5))];
+  static const char* const names[] = {"KNOT", "SHARD", "BURST", "COMB", "LOGIC", "MELT", "SQUALL"};
+  return names[std::max(0, std::min(model, 6))];
 }
 const char* macroName(int model, int macro) {
-  static const char* const names[6][6] = {
+  static const char* const names[7][6] = {
     {"DECAY", "MOD", "RATIO", "SPREAD", "MOTION", "FOLD"},
     {"DECAY", "MOD", "RATIO", "FEEDBACK", "MOTION", "BITE"},
     {"DECAY", "MOD", "NOISE", "COLOR", "MOTION", "FEEDBACK"},
     {"DECAY", "MOD", "TIME", "DAMPING", "MOTION", "REGEN"},
     {"DECAY", "MOD", "RATE", "PATTERN", "MOTION", "CRUSH"},
-    {"DECAY", "MOD", "RATIO", "CHAOS", "MOTION", "DRIVE"}};
-  return names[std::max(0, std::min(model, 5))][macro];
+    {"DECAY", "MOD", "RATIO", "CHAOS", "MOTION", "DRIVE"},
+    {"DECAY", "FM", "DETUNE", "VOICES", "MOTION", "CLIP"}};
+  return names[std::max(0, std::min(model, 6))][macro];
 }
 }
 
@@ -42,7 +43,7 @@ struct Sintered : Module {
   Sintered() {
     config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS);
     configParam(PITCH_PARAM, -4.0f, 4.0f, 0.0f, "Pitch", " oct");
-    configParam(MODEL_PARAM, 0.0f, 5.0f, 0.0f, "Model"); getParamQuantity(MODEL_PARAM)->snapEnabled = true;
+    configParam(MODEL_PARAM, 0.0f, 6.0f, 0.0f, "Model"); getParamQuantity(MODEL_PARAM)->snapEnabled = true;
     const float defaults[] = {82.0f / 255.0f, 112.0f / 255.0f, 128.0f / 255.0f, 96.0f / 255.0f, 128.0f / 255.0f, 64.0f / 255.0f};
     const char* names[] = {"Decay", "Mod", "A", "B", "Motion", "C"};
     for (int i = 0; i < 6; ++i) {

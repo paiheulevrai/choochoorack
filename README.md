@@ -1,6 +1,7 @@
 # Choo Choo Rack
 
-Three VCV Rack 2 modules, ported from ChooChooTracker.
+One VCV Rack 2 plugin containing three modules, ported from ChooChooTracker:
+MME, Bogie and Sintered. Plugin slug: `ChooChooRack`, version `2.0.1`.
 
 ![Choo Choo Rack — MME, Bogie and Sintered](capture.png)
 
@@ -16,7 +17,7 @@ Good for dirty gritty sounds, unstable modulations, techno, noise and industrial
 Parameters:
 - Models: Ring, Fold, Cross, VPM, Sync, Logic or Vocode. Different types of modulations
 - Intervals sets the oscillators relationship
-- Waves selects paired oscillator shapes
+- Waves continuously morphs between five paired oscillator shapes
 - Amount set the strength of the oscillators interaction
 - Flow changes the direction/variant of the interatction
 - Feedback : from subtle to deliberately unruly
@@ -52,35 +53,41 @@ Inspired by "what would happen if you make drums with unconventional algos?"
 - Comb: Oscillator-and-noise excitation fed into a short, unstable comb resonator.
 - Logic: Quantized oscillators combined with XOR, AND, OR or comparator logic, then folded.
 - Melt: Feedback-warped frequency modulation pushed through soft saturation and noisy instability.
+- Squall: Three to five detuned, band-limited saw oscillators with noise FM and clipping.
+
+Motion controls the depth and timing of model-specific modulation, with a neutral
+center, a short swell on the negative side and an exponential fall on the positive side.
 
 ## Install
 
-Download the Windows x64 `.vcvplugin` releases and install them with Rack's
-Library menu, or copy them to `Documents/Rack2/plugins-win-x64`, then restart
-Rack.
+Download `ChooChooRack-2.0.1-win-x64.vcvplugin` from the GitHub releases,
+copy it to Rack's user folder under `plugins-win-x64`, then restart Rack.
+On Windows the default location is `%LOCALAPPDATA%/Rack2/plugins-win-x64`.
+All three modules are included in this single package.
+
+This combined plugin replaces the earlier separate ChooChooMME, ChooChooBogie
+and ChooChooSintered plugins. Existing patches using those plugin slugs need
+their modules replaced and reconnected; save a copy before migrating.
 
 ## Build
 
-All three plugins target Rack 2 and require the matching Rack SDK plus a MinGW64
+The plugin targets Rack 2 and requires the matching Rack SDK plus a MinGW64
 toolchain on Windows.
 
 ```sh
-# MME
-cd ChooChooMME
+# From the repository root
 make RACK_DIR=/path/to/Rack-SDK dist
-
-# Bogie
-cd ChooChooBogie
-make RACK_DIR=/path/to/Rack-SDK dist
-
-# Sintered
-cd ChooChooSintered
-make RACK_DIR=/path/to/Rack-SDK dist
+make RACK_DIR=/path/to/Rack-SDK test
 ```
 
-The standalone DSP tests are `ChooChooMME/tests/mme_core_test.cpp`,
-`ChooChooBogie/tests/bogie_core_test.cpp` and
-`ChooChooSintered/tests/sintered_core_test.cpp`.
+The standalone DSP tests are [MME](tests/mme_core_test.cpp),
+[Bogie](tests/bogie_core_test.cpp) and [Sintered](tests/sintered_core_test.cpp).
+They cover all models at 44.1, 48 and 96 kHz, percussion tails and macro response,
+MME waveform morphing, Sintered Motion continuity and retriggering.
+
+The DSP port follows `chipnomad_lib/synth/mme_voice.cpp`, `drum_synth_voice.cpp`
+and `sintered_voice.cpp` in ChooChooTracker. Tracker-specific envelopes, filters
+and gain stages are omitted in Rack, where those functions can be patched externally.
 
 ## License and attribution
 
