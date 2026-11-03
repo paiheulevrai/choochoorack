@@ -7,7 +7,7 @@ profondes, sous-basse, métal résonant, frappes massives et poussières stéré
 Le repère esthétique est [VHIKK X](https://forge-tme.com/vhikk-x/) : une matière
 qui se transforme lentement, avec des zones plus instables à explorer en live.
 
-**Tous les sons viennent de ChooChooRack** : trois MME, trois Bogie et trois
+**Tous les sons viennent de ChooChoo** : trois MME, trois Bogie et trois
 Sintered. Les autres modules assurent uniquement le contrôle, le filtrage,
 le mixage et les effets. Deux MME jouent quatre voix chacun ; Comb joue trois
 voix avec des déclenchements indépendants.
@@ -16,7 +16,7 @@ voix avec des déclenchements indépendants.
 
 Modules nécessaires, déjà installés sur cette machine :
 
-- ChooChooRack 2.0.2 ou version ultérieure.
+- ChooChoo 2.0.3 ou version ultérieure.
 - VCV Fundamental 2.6.4.
 - Valley 2.4.5, pour Plateau.
 
