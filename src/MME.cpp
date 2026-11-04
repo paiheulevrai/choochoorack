@@ -272,4 +272,4 @@ struct ChooChooMMEWidget : ModuleWidget {
   }
 };
 
-Model* modelChooChooMME = createModel<ChooChooMME, ChooChooMMEWidget>("ChooChooMME");
+Model* modelChooChooMME = createModel<ChooChooMME, ChooChooMMEWidget>("MME");

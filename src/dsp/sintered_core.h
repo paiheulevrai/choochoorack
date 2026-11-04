@@ -23,7 +23,7 @@ class Core {
   void setFrequency(float frequency);
   void setParameters(const Parameters& parameters);
   void trigger();
-  float process();
+  float process(bool gateHigh = false);
   bool active() const { return active_; }
 
  private:
@@ -35,6 +35,7 @@ class Core {
   float sampleRate_ = 48000.0f;
   float frequency_ = 440.0f;
   float age_ = 0.0f;
+  float decayAge_ = 0.0f;
   float duration_ = 0.1f;
   float amplitude_ = 0.0f;
   std::array<float, 5> phase_{};

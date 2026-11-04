@@ -17,6 +17,8 @@ Use a polyphonic audio chain or VCV Sum to mix the output to mono.
 
 ### MME - Multi Modulation VCO engine
 
+VCV module slug: `MME`.
+
 A two-oscillator VCO built around interactions between its internal
 oscillators. Inspired by Noise Engineering and Mutable Warps.
 
@@ -55,6 +57,9 @@ The lower half of the parameter ranges targets conventional drum sounds, while h
 The percussive version of MME. Weird percussions from another world, good for IDM, noise, industrial, techno and experimentation. Very wild timbre variations. 
 Inspired by "what would happen if you make drums with unconventional algos?"
 
+The Trigger input responds to either short triggers or held gates. A high gate
+holds the sound; decay resumes when the signal goes low.
+
 - Knot: Three coupled sine oscillators tangled through phase modulation and wavefolding.
 - Shard: Feedback-driven oscillator pair crushed through aggressive folding and saturation.
 - Burst: Colored noise and a pitched resonator injected into a regenerative wavefolder.
@@ -77,7 +82,9 @@ polyphonic drones, heavy percussion and evolving stereo effects.
 Download `ChooChooRack-2.0.2-win-x64.vcvplugin` from the GitHub releases,
 copy it to Rack's user folder under `plugins-win-x64`, then restart Rack.
 On Windows the default location is `%LOCALAPPDATA%/Rack2/plugins-win-x64`.
-All three modules are included in this single package.
+All three modules are included in this single package. MME's module slug is now
+`MME` instead of `ChooChooMME`; existing patches using the old slug may need to
+replace that module.
 
 This combined plugin replaces the earlier separate ChooChooMME, ChooChooBogie
 and ChooChooSintered plugins. Existing patches using those plugin slugs need

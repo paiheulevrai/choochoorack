@@ -86,7 +86,7 @@ struct Sintered : Module {
       core.setParameters(parameters);
       core.setFrequency(261.625565f * std::pow(2.0f, params[PITCH_PARAM].getValue() + inputs[VOCT_INPUT].getPolyVoltage(channel)));
       if (triggers[channel].process(inputs[TRIG_INPUT].getPolyVoltage(channel))) core.trigger();
-      outputs[AUDIO_OUTPUT].setVoltage(5.0f * core.process(), channel);
+      outputs[AUDIO_OUTPUT].setVoltage(5.0f * core.process(triggers[channel].isHigh()), channel);
     }
   }
 

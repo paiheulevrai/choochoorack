@@ -61,5 +61,13 @@ int main() {
     retriggered.trigger(); for (int i = 0; i < 100; ++i) retriggered.process(); retriggered.trigger(); fresh.trigger();
     for (int i = 0; i < 512; ++i) assert(retriggered.process() == fresh.process());
   }
+
+  Core gated; Parameters gateParameters; gateParameters.decay = 1.0f;
+  gated.init(48000.0f); gated.setParameters(gateParameters); gated.trigger();
+  for (int i = 0; i < 48000; ++i) gated.process(true);
+  assert(gated.active());
+  for (int i = 0; i < 48000; ++i) gated.process();
+  assert(!gated.active());
+
   std::cout << "sintered_core_test passed\n";
 }

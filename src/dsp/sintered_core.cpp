@@ -14,7 +14,7 @@ int modelIndex(Model model) { return std::max(0, std::min(static_cast<int>(model
 void Core::init(float sampleRate) {
   sampleRate_ = sampleRate > 0.0f ? sampleRate : 48000.0f;
   active_ = false;
-  age_ = amplitude_ = feedback_ = dc_ = noiseLow_ = 0.0f;
+  age_ = decayAge_ = amplitude_ = feedback_ = dc_ = noiseLow_ = 0.0f;
   phase_.fill(0.0f);
   comb_.fill(0.0f);
 }
@@ -34,7 +34,7 @@ void Core::setParameters(const Parameters& parameters) {
 }
 
 void Core::trigger() {
-  age_ = amplitude_ = feedback_ = dc_ = noiseLow_ = 0.0f;
+  age_ = decayAge_ = amplitude_ = feedback_ = dc_ = noiseLow_ = 0.0f;
   combIndex_ = 0;
   active_ = true;
   randomState_ = 0x53494e54u;
@@ -70,8 +70,8 @@ float Core::saw(float frequency, int slot) {
   return value;
 }
 
-float Core::process() {
-  if (!active_ || age_ >= duration_) {
+float Core::process(bool gateHigh) {
+  if (!active_ || decayAge_ >= duration_) {
     active_ = false;
     return 0.0f;
   }
@@ -167,8 +167,9 @@ float Core::process() {
   dc_ += .02f * (raw - dc_);
   float target = (raw - dc_) * (.12f + parameters_.mod * .82f);
   feedback_ += (target - feedback_) * (.025f + .10f * (1.0f - c));
-  amplitude_ = std::exp(-5.5f * age_ / duration_);
+  amplitude_ = std::exp(-5.5f * decayAge_ / duration_);
   age_ += 1.0f / sampleRate_;
+  if (!gateHigh) decayAge_ += 1.0f / sampleRate_;
   float processed = std::tanh(sample) * amplitude_ * calibration;
   if (parameters_.model == Model::Squall)
     processed = std::tanh(processed * (1.0f + c * 15.0f));

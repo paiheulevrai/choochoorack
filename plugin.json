@@ -10,8 +10,8 @@
   "manualUrl": "https://github.com/paiheulevrai/choochoorack#modules",
   "modules": [
     {
-      "slug": "ChooChooMME",
-      "name": "Choo Choo MME",
+      "slug": "MME",
+      "name": "MME",
       "description": "Multi Modulation Engine VCO",
       "tags": ["VCO", "Oscillator", "Waveshaper", "Polyphonic"]
     },
