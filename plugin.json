@@ -1,7 +1,7 @@
 {
-  "slug": "ChooChooRack",
+  "slug": "ChooChoo",
   "name": "Choo Choo Rack",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "license": "MIT",
   "brand": "Choo Choo",
   "author": "Choo Choo",
@@ -13,19 +13,19 @@
       "slug": "MME",
       "name": "MME",
       "description": "Multi Modulation Engine VCO",
-      "tags": ["VCO", "Oscillator", "Waveshaper", "Polyphonic"]
+      "tags": ["VCO", "Waveshaper", "Polyphonic"]
     },
     {
       "slug": "Bogie",
       "name": "Bogie",
       "description": "Twelve-model one-shot drum synthesizer",
-      "tags": ["Drum", "Drum synth", "Percussion", "Polyphonic"]
+      "tags": ["Drum", "Polyphonic"]
     },
     {
       "slug": "Sintered",
       "name": "Sintered",
       "description": "Seven-model experimental digital percussion voice",
-      "tags": ["Drum", "Percussion", "Physical modeling", "Polyphonic"]
+      "tags": ["Drum", "Physical modeling", "Polyphonic"]
     }
   ]
 }

@@ -13,7 +13,7 @@
       "version": "2.6.6",
       "params": [],
       "data": {
-        "text": "LES FORGES\nDU BROUILLARD\n\n104 BPM\nambient / indus\n\nGENERATIF\n\nSEQ 1 : kick\nSEQ 2 : backbeat\nSEQ 3 : cycle 7\nSEQ 4 : accords\n\nLe paysage change\nsans intervention.\n\nSons : ChooChooRack\nuniquement."
+        "text": "LES FORGES\nDU BROUILLARD\n\n104 BPM\nambient / indus\n\nGENERATIF\n\nSEQ 1 : kick\nSEQ 2 : backbeat\nSEQ 3 : cycle 7\nSEQ 4 : accords\n\nLe paysage change\nsans intervention.\n\nSons : ChooChoo\nuniquement."
       },
       "pos": [
         0,
@@ -1023,9 +1023,9 @@
     },
     {
       "id": 13,
-      "plugin": "ChooChooRack",
+      "plugin": "ChooChoo",
       "model": "MME",
-      "version": "2.0.2",
+      "version": "2.0.3",
       "params": [
         {
           "id": 0,
@@ -1150,9 +1150,9 @@
     },
     {
       "id": 16,
-      "plugin": "ChooChooRack",
+      "plugin": "ChooChoo",
       "model": "MME",
-      "version": "2.0.2",
+      "version": "2.0.3",
       "params": [
         {
           "id": 0,
@@ -1277,9 +1277,9 @@
     },
     {
       "id": 19,
-      "plugin": "ChooChooRack",
+      "plugin": "ChooChoo",
       "model": "MME",
-      "version": "2.0.2",
+      "version": "2.0.3",
       "params": [
         {
           "id": 0,
@@ -1437,9 +1437,9 @@
     },
     {
       "id": 23,
-      "plugin": "ChooChooRack",
+      "plugin": "ChooChoo",
       "model": "Bogie",
-      "version": "2.0.2",
+      "version": "2.0.3",
       "params": [
         {
           "id": 0,
@@ -1510,9 +1510,9 @@
     },
     {
       "id": 24,
-      "plugin": "ChooChooRack",
+      "plugin": "ChooChoo",
       "model": "Bogie",
-      "version": "2.0.2",
+      "version": "2.0.3",
       "params": [
         {
           "id": 0,
@@ -1583,9 +1583,9 @@
     },
     {
       "id": 25,
-      "plugin": "ChooChooRack",
+      "plugin": "ChooChoo",
       "model": "Bogie",
-      "version": "2.0.2",
+      "version": "2.0.3",
       "params": [
         {
           "id": 0,
@@ -1656,9 +1656,9 @@
     },
     {
       "id": 26,
-      "plugin": "ChooChooRack",
+      "plugin": "ChooChoo",
       "model": "Sintered",
-      "version": "2.0.2",
+      "version": "2.0.3",
       "params": [
         {
           "id": 0,
@@ -1729,9 +1729,9 @@
     },
     {
       "id": 27,
-      "plugin": "ChooChooRack",
+      "plugin": "ChooChoo",
       "model": "Sintered",
-      "version": "2.0.2",
+      "version": "2.0.3",
       "params": [
         {
           "id": 0,
@@ -1802,9 +1802,9 @@
     },
     {
       "id": 28,
-      "plugin": "ChooChooRack",
+      "plugin": "ChooChoo",
       "model": "Sintered",
-      "version": "2.0.2",
+      "version": "2.0.3",
       "params": [
         {
           "id": 0,

@@ -1,7 +1,7 @@
 # Choo Choo Rack
 
 One VCV Rack 2 plugin containing three modules, ported from ChooChooTracker:
-MME, Bogie and Sintered. Plugin slug: `ChooChooRack`, version `2.0.2`.
+MME, Bogie and Sintered. Plugin slug: `ChooChoo`, version `2.0.3`.
 
 ![Choo Choo Rack — MME, Bogie and Sintered](capture.png)
 
@@ -79,7 +79,7 @@ polyphonic drones, heavy percussion and evolving stereo effects.
 
 ## Install
 
-Download `ChooChooRack-2.0.2-win-x64.vcvplugin` from the GitHub releases,
+Download `ChooChoo-2.0.3-win-x64.vcvplugin` from the GitHub releases,
 copy it to Rack's user folder under `plugins-win-x64`, then restart Rack.
 On Windows the default location is `%LOCALAPPDATA%/Rack2/plugins-win-x64`.
 All three modules are included in this single package. MME's module slug is now
