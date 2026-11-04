@@ -1025,7 +1025,7 @@
       "id": 13,
       "plugin": "ChooChoo",
       "model": "MME",
-      "version": "2.0.3",
+      "version": "2.0.4",
       "params": [
         {
           "id": 0,
@@ -1152,7 +1152,7 @@
       "id": 16,
       "plugin": "ChooChoo",
       "model": "MME",
-      "version": "2.0.3",
+      "version": "2.0.4",
       "params": [
         {
           "id": 0,
@@ -1279,7 +1279,7 @@
       "id": 19,
       "plugin": "ChooChoo",
       "model": "MME",
-      "version": "2.0.3",
+      "version": "2.0.4",
       "params": [
         {
           "id": 0,
@@ -1439,7 +1439,7 @@
       "id": 23,
       "plugin": "ChooChoo",
       "model": "Bogie",
-      "version": "2.0.3",
+      "version": "2.0.4",
       "params": [
         {
           "id": 0,
@@ -1512,7 +1512,7 @@
       "id": 24,
       "plugin": "ChooChoo",
       "model": "Bogie",
-      "version": "2.0.3",
+      "version": "2.0.4",
       "params": [
         {
           "id": 0,
@@ -1585,7 +1585,7 @@
       "id": 25,
       "plugin": "ChooChoo",
       "model": "Bogie",
-      "version": "2.0.3",
+      "version": "2.0.4",
       "params": [
         {
           "id": 0,
@@ -1658,7 +1658,7 @@
       "id": 26,
       "plugin": "ChooChoo",
       "model": "Sintered",
-      "version": "2.0.3",
+      "version": "2.0.4",
       "params": [
         {
           "id": 0,
@@ -1731,7 +1731,7 @@
       "id": 27,
       "plugin": "ChooChoo",
       "model": "Sintered",
-      "version": "2.0.3",
+      "version": "2.0.4",
       "params": [
         {
           "id": 0,
@@ -1804,7 +1804,7 @@
       "id": 28,
       "plugin": "ChooChoo",
       "model": "Sintered",
-      "version": "2.0.3",
+      "version": "2.0.4",
       "params": [
         {
           "id": 0,
